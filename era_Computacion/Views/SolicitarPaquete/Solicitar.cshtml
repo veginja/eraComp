@@ -1,0 +1,327 @@
+﻿@model era_Computacion.Models.solicitudCustomCliente
+@{
+    ViewData["Title"] = "Paquetes";
+}
+    <div class="page-breadcrumb">
+        <div class="row align-items-center">
+            <div class="col-5">
+                <h4 class="page-title">@ViewData["Title"]</h4>
+
+            </div>
+
+        </div>
+    </div>
+<hr />
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Row -->
+    <div class="row">
+
+        <!-- Column -->
+        <div class="col-lg-12 col-xlg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    @{if (ViewBag.tieneEmpresa == 0)
+                        {
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h4>Debe de registrar una institución para establecer una orden</h4>
+                                    <div class="col-sm-12 text-center">
+                                        <input type="button" class="btn btn-info" onclick="location.href='@Url.Action("agregarInstitucion","Instituciones")'" value="Registrar institución" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <form class="form-horizontal form-material" asp-action="Solicitar">
+                                <div class="row">
+
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="col-md-12">
+
+                                        <div class="form-group col-md-12">
+                                            <label asp-for="solicitud.RCliente" class="control-label">Institución</label>
+
+                                            <select asp-for="solicitud.RCliente" id="institucion" required class="form-control js-example-basic-single" asp-items="ViewBag.instituciones">
+                                                <option value="" selected disabled hidden>Seleccione una opción</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @{ foreach (var item in Model.arreglo)
+                                        {
+                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                        <div class="product-chooser-item text-center">
+                                            <img src="/images/paquetes/@item.ImgPaquete" style="width:250px" class="img-rounded col-xs-4 col-sm-4 col-md-12 col-lg-12 " alt="@item.Nombre">
+                                            <div class="col-xs-8 col-sm-8 col-md-12 col-lg-12">
+
+                                                <span class="title">@item.Nombre<br /></span>
+                                                <input type="radio" required name="paquete" value="@item.IdPaquete">
+                                                <br /><br />
+                                                <span class="description" style="text-align:justify">@item.Descripcion<br /></span>
+
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                            }
+
+
+                                        }
+
+
+
+
+                                </div>
+                                <div class="form-group">
+                                    <br />
+                                    <div class="col-sm-12 text-center">
+                                        <button class="btn btn-success">Agregar</button>
+                                        <input type="button" class="btn btn-info" onclick="location.href='/SolicitarPaquete/paquetePersonalizado';" value="Crear paquete personalizado" />
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- Row -->
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+
+            $("#usuario").change(function () {
+                                var url = '@Url.Content("~/")' + "Solicitudes/getInstitucion";
+                $.post(url, { id: $("#usuario").val() }, function (data) {
+                            $("#institucion").empty();
+                            $("#institucion").append(data);
+                                    });
+                                });
+        });
+
+        $("#paquete").change(function () {
+                                            $("#camaras").off("change");
+                                $("#dvrs").off("change");
+                                $("#discoduros").off("change");
+                                $("#instalacion").off("change");
+                        $.ajax({
+
+                url : '/Paquetes/getDatos?id='+$("#paquete").val(),
+                type : 'POST',
+
+                dataType:'json',
+
+                            success: function (data) {
+                                $('.js-example-basic-single').select2();
+                                if (data.data[0] == null) {
+                                     $("#camaras").val("").trigger("change");
+                                    $("#dvrs").val("").trigger("change");
+                                    
+                                    $("#discoduros").val("").trigger("change");
+                    
+                                    $("#instalacion").val("").trigger("change");
+
+                                    $("#cantcamaras").val(1);
+                                    $("#cantdvr").val(1);
+                                    $("#cantdiscoduro").val(1);
+                                    $("#cantinstalacion").val(1);
+                                    
+                                    $("#costoCamara").val(0);
+                                    $("#costoDvr").val(0);
+                                    $("#costoHDD").val(0);
+                                    $("#costoInstalacion").val(0);
+                                    actualiza();
+
+
+                                                               $("#camaras").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#camaras").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoCamara").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoCamara").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+
+                                $("#dvrs").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#dvrs").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoDvr").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoDvr").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+
+                                $("#discoduros").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#discoduros").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoHDD").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoHDD").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+
+                                $("#instalacion").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#instalacion").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoInstalacion").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoInstalacion").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+                                }
+                                    
+                     $("#camaras").select2("val", data.data[0].producto.toString());
+                    
+                    $("#dvrs").select2("val", data.data[1].producto.toString());
+                    
+                    $("#discoduros").select2("val", data.data[2].producto.toString());
+                    
+                    $("#instalacion").select2("val", data.data[3].producto.toString()); 
+                    $("#cantcamaras").val(data.data[0].cantidad);
+                    $("#cantdvr").val(data.data[1].cantidad);
+                    $("#cantdiscoduro").val(data.data[2].cantidad);
+                    $("#cantinstalacion").val(data.data[3].cantidad);
+
+
+                    $("#texto").html("$" + data.total);
+
+                    $("#precio").val(data.total)
+
+
+                    $("#costoCamara").val(data.precios[0]);
+                    $("#costoDvr").val(data.precios[1]);
+                    $("#costoHDD").val(data.precios[2]);
+                                $("#costoInstalacion").val(data.precios[3]);
+ 
+                            $("#camaras").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#camaras").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoCamara").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoCamara").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+
+                                $("#dvrs").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#dvrs").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoDvr").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoDvr").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+
+                                $("#discoduros").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#discoduros").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoHDD").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoHDD").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+
+                                $("#instalacion").change(function () {
+                                var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+                                    $.post(url, { id: $("#instalacion").val() }, function (data) {
+                                        if (data > 0) {
+                                            $("#costoInstalacion").val(data);
+                                            actualiza();
+                                        }
+                                        else {
+                                            $("#costoInstalacion").val(0);
+                                            actualiza();
+                                        }
+                                    });
+                                });
+                },
+                error : function(request,error)
+                {
+                    alert("Request: "+JSON.stringify(request));
+                }
+            });
+
+        });
+
+        function actualiza() {
+            var camaras = $("#costoCamara").val() * $("#cantcamaras").val();
+            var dvr = $("#costoDvr").val() * $("#cantdvr").val();
+            var hdd = $("#costoHDD").val() * $("#cantdiscoduro").val();
+            var instalacion = $("#costoInstalacion").val() * $("#cantinstalacion").val();
+            var total = parseFloat(camaras) + parseFloat(dvr) + parseFloat(hdd) + parseFloat(instalacion);
+            $("#texto").html("$" + total);
+            $("#precio").val(total);
+        }
+
+        $("#cantcamaras").change(function () {
+            actualiza();
+        });
+
+        $("#cantdvr").change(function () {
+            actualiza();
+        });
+
+        $("#cantdiscoduro").change(function () {
+            actualiza();
+        });
+
+        $("#cantinstalacion").change(function () {
+            actualiza();
+        });
+
+      
+    </script>
+</div>
+
+

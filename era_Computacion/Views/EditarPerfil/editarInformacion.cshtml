@@ -1,0 +1,103 @@
+﻿@model era_Computacion.Models.db.Usuario
+@{
+    ViewData["Title"] = "Editar información";
+}
+<div class="page-breadcrumb">
+    <div class="row align-items-center">
+        <div class="col-5">
+            <h4 class="page-title">@ViewData["Title"]</h4>
+
+        </div>
+
+    </div>
+</div>
+<hr />
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Row -->
+    <div class="row">
+
+        <!-- Column -->
+        <div class="col-lg-12 col-xlg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="form-horizontal form-material" asp-action="editarInformacion" enctype="multipart/form-data">
+                        <div class="row">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Nombre" class="control-label"></label>
+                                <input asp-for="Nombre" required class="form-control" />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Apellidos" class="control-label"></label>
+                                <input asp-for="Apellidos" required class="form-control" />
+                                <span asp-validation-for="Apellidos" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Direccion" class="control-label">Dirección</label>
+                                <input asp-for="Direccion" required class="form-control" />
+                                <span asp-validation-for="Direccion" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Correo" class="control-label"></label>
+                                <input asp-for="Correo" type="email" required class="form-control" />
+                                <span asp-validation-for="Correo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="NombreUsuario" class="control-label">Nombre de usuario</label>
+                                <input asp-for="NombreUsuario" required class="form-control" />
+                                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Contrasena" class="control-label">Contraseña</label>
+                                <input asp-for="Contrasena" type="password" value="@Model.Contrasena" required class="form-control" />
+                                <span asp-validation-for="Contrasena" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Telefono" class="control-label">Teléfono</label>
+                                <input asp-for="Telefono" required class="form-control" />
+                                <span asp-validation-for="Telefono" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Celular" class="control-label"></label>
+                                <input asp-for="Celular" required class="form-control" />
+                                <span asp-validation-for="Celular" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Imagen de perfil</label><br />
+                                <span class="btn btn-success fileinput-button">
+                                    <span>Selecciona una imagen</span>
+                                    <input accept="image/jpeg, image/png, image/gif,"
+                                           id="files" name="files" type="file" />
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <button class="btn btn-success">Editar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- Row -->
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+</div>
+
+

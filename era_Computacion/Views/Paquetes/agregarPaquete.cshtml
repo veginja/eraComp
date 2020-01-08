@@ -1,0 +1,210 @@
+﻿@model era_Computacion.Models.db.Paquete
+@{
+    ViewData["Title"] = "Agregar paquete";
+}
+    <div class="page-breadcrumb">
+        <div class="row align-items-center">
+            <div class="col-5">
+                <h4 class="page-title">@ViewData["Title"]</h4>
+
+            </div>
+
+        </div>
+    </div>
+<hr />
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Row -->
+    <div class="row">
+
+        <!-- Column -->
+        <div class="col-lg-12 col-xlg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="form-horizontal form-material" asp-action="agregarPaquete" enctype="multipart/form-data">
+                        <div class="row">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group col-md-6">
+                                <label asp-for="Nombre" class="control-label">Nombre del producto</label>
+                                <input asp-for="Nombre" required class="form-control" />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Descripcion" class="control-label">Descripción</label>
+                                <input asp-for="Descripcion" required class="form-control" />
+                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Cámaras</label>
+                                <select name="camaras" id="camaras" required class="form-control js-example-basic-single" asp-items="ViewBag.camaras">
+                                    <option value="" selected disabled hidden>Seleccione una opción</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Cantidad</label>
+                                <input type="number" min="0" step="1" id="cantcamaras" name="cantcamaras" value="1" required class="form-control" />
+                                <input type="hidden" id="costoCamara" value="0" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">DVR</label>
+                                <select name="dvr" id="dvrs" required class="form-control js-example-basic-single" asp-items="ViewBag.dvrs">
+                                    <option value="" selected disabled hidden>Seleccione una opción</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Cantidad</label>
+                                <input type="number" value="1" min="0" step="1" id="cantdvr" name="cantdvr" required class="form-control" />
+                                <input type="hidden" id="costoDvr" value="0" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Disco Duro</label>
+                                <select name="discoduro" id="discoduros" required class="form-control js-example-basic-single" asp-items="ViewBag.discoduro">
+                                    <option value="" selected disabled hidden>Seleccione una opción</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Cantidad</label>
+                                <input type="number" value="1" min="0" step="1" id="cantdiscoduro" name="cantdiscoduro" required class="form-control" />
+                                <input type="hidden" id="costoHDD" value="0" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Instalación</label>
+                                <select name="instalacion" id="instalacion" required class="form-control js-example-basic-single" asp-items="ViewBag.instalacion">
+                                    <option value="" selected disabled hidden>Seleccione una opción</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Cantidad</label>
+                                <input type="number" value="1" min="0" step="1" id="cantinstalacion" name="cantinstalacion" required class="form-control" />
+                                <input type="hidden" id="costoInstalacion" value="0" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Imagen del paquete</label><br />
+                                <span class="btn btn-success fileinput-button">
+                                    <span>Selecciona una imagen</span>
+                                    <input accept="image/jpeg, image/png, image/gif,"
+                                           id="files" name="files" type="file" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Costo del paquete:</label>
+                                <input type="hidden" asp-for="Precio" id="precio" />
+                                <p id="texto">$ 0</p>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12 text-center">
+                                <button class="btn btn-success">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- Row -->
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+
+    <script>
+        $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+        function actualiza() {
+            var camaras = $("#costoCamara").val() * $("#cantcamaras").val();
+            var dvr = $("#costoDvr").val() * $("#cantdvr").val();
+            var hdd = $("#costoHDD").val() * $("#cantdiscoduro").val();
+            var instalacion = $("#costoInstalacion").val() * $("#cantinstalacion").val();
+            var total = parseFloat(camaras) + parseFloat(dvr) + parseFloat(hdd) + parseFloat(instalacion);
+            $("#texto").html("$" + total);
+            $("#precio").val(total);
+        }
+
+        $("#cantcamaras").change(function () {
+            actualiza();
+        });
+
+        $("#cantdvr").change(function () {
+            actualiza();
+        });
+
+        $("#cantdiscoduro").change(function () {
+            actualiza();
+        });
+
+        $("#cantinstalacion").change(function () {
+            actualiza();
+        });
+
+        $("#camaras").change(function () {
+        var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+            $.post(url, { id: $("#camaras").val() }, function (data) {
+                if (data > 0) {
+                    $("#costoCamara").val(data);
+                    actualiza();
+                }
+                else {
+                    $("#costoCamara").val(0);
+                    actualiza();
+                }
+            });
+        });
+
+        $("#dvrs").change(function () {
+        var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+            $.post(url, { id: $("#dvrs").val() }, function (data) {
+                if (data > 0) {
+                    $("#costoDvr").val(data);
+                    actualiza();
+                }
+                else {
+                    $("#costoDvr").val(0);
+                    actualiza();
+                }
+            });
+        });
+
+        $("#discoduros").change(function () {
+        var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+            $.post(url, { id: $("#discoduros").val() }, function (data) {
+                if (data > 0) {
+                    $("#costoHDD").val(data);
+                    actualiza();
+                }
+                else {
+                    $("#costoHDD").val(0);
+                    actualiza();
+                }
+            });
+        });
+
+        $("#instalacion").change(function () {
+        var url = '@Url.Content("~/")' + "Paquetes/getPrecioProducto";
+            $.post(url, { id: $("#instalacion").val() }, function (data) {
+                if (data > 0) {
+                    $("#costoInstalacion").val(data);
+                    actualiza();
+                }
+                else {
+                    $("#costoInstalacion").val(0);
+                    actualiza();
+                }
+            });
+        });
+    </script>
+</div>
+
+

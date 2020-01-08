@@ -1,0 +1,247 @@
+﻿@model IEnumerable<era_Computacion.Models.db.Infofacturacion>
+
+
+@{
+    ViewData["Title"] = "Facturacion";
+
+    string ru = ViewData["ReturnURL"] as string;
+}
+
+
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <div class="row">
+
+        <div class="col-12">
+            <div class="page-breadcrumb">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <h4 class="page-title">@ViewData["Title"]</h4>
+                        <div class="d-flex align-items-center">
+
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="row col-md-12">
+                            <div class="col-md-12 col-lg-12 col-xl-12 text-right">
+                                <br />
+                                <div class=" upgrade-btn">
+                                    <a href="@Url.Action("agregarFactura","Facturacion")" class="btn btn-info text-white">Agregar factura</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="card">
+                <div class="card-body">
+
+
+                    <div class="table-responsive ">
+                        <table id="tablaPaquetes" class="table">
+                            <thead>
+
+
+                                <tr>
+                                    <th>
+                                        ID
+                                    </th>
+                                    <th>
+                                        Clave
+                                    </th>
+                                    <th>
+                                        Documento
+                                    </th>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th>
+                                        Institucion
+                                    </th>
+                                    <th>
+                                        Paquete
+                                    </th>
+                                    <th> Estado </th>
+                                    <th>
+                                        Editar / Mostrar
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IdInfoFac)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ClaveFacturacion)
+                                        </td>
+                                        <td>
+                                            <a class="btn" href="~/images/facturas/@item.DocFacturacion" download="@item.DocFacturacion"> <i class="fa fa-download"></i> Descargar</a>
+
+                                        </td>
+                                        <td>
+                                            
+                                            @Html.DisplayFor(modelItem => item.FechaFacturacion)
+                                        </td>
+                                        <td class="text-center">
+                                            @Html.DisplayFor(modelItem => item.RVentasNavigation.RSolicitudNavigation.RClienteNavigation.RInstNavigation.Nombre)
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RVentasNavigation.Descripcion)
+                                        </td>
+
+                                        <td id="@Html.DisplayFor(modelItem => item.IdInfoFac)Dato">
+                                            @if (item.RStatus == 1)
+                                            {
+                                                <a href='#' class='btn btn-success btn-sm' onclick='DeleteEquip(@Html.DisplayFor(modelItem => item.IdInfoFac))'><i class='fa fa-check'></i></a>
+                                            }
+                                            @if (item.RStatus == 2)
+                                            {
+                                                <a href='#' class='btn btn-danger btn-sm' onclick='ActivateEquip(@Html.DisplayFor(modelItem => item.IdInfoFac))'><i class='fa fa-minus'></i></a>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            <a class='btn btn-info btm-sm' href='/Facturacion/editarFactura?id=@Html.DisplayFor(modelItem => item.IdInfoFac)'><i class='fa fa-edit'></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+</div>
+<!-- Page Heading -->
+
+<script>
+    $(document).ready(function calldata() {
+
+        $('#tablaPaquetes').DataTable({
+            "language": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            "destroy": true,
+            "pageLength": 10,
+            "order": [[0, "desc"]],
+            'bVisible': false,
+
+            "aoColumnDefs": [
+                { "sClass": "text-center", "aTargets": [2, 3] }
+            ]
+        });
+
+    });
+</script>
+
+<script>
+
+
+    function DeleteEquip(DataID) {
+        if (confirm("¿Está seguro de desactivar el producto?")) {
+            Delete(DataID);
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    function Delete(DataID) {
+        var url = '@Url.Content("~/")' + "Facturacion/desactivateFactura";
+        $.post(url, { ID: DataID }, function (data) {
+            if (data == "Desactivado") {
+                new PNotify({
+                    title: 'Desactivado',
+                    text: 'Se ha desactivado la factura correctamente.',
+                    type: 'success'
+                });
+                var str = "Dato";
+                var str2 = "#" + DataID;
+                $(str2.concat(str)).empty();
+
+                $("<a href='#' class='btn btn-danger btn-sm' onclick=ActivateEquip('" + DataID + "'); ><i class='fa fa-minus'></i></a>").appendTo(str2.concat(str));
+            }
+            else {
+                alert("Ups! Algo malo ocurrió");
+            }
+        });
+    }
+
+    function ActivateEquip(CustomerID) {
+        if (confirm("¿Está seguro de activar el producto?")) {
+            Activate(CustomerID);
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    function Activate(DataID) {
+        var url = '@Url.Content("~/")' + "Facturacion/activateFactura";
+        $.post(url, { ID: DataID }, function (data) {
+            if (data == "Activado") {
+                new PNotify({
+                    title: 'Activado',
+                    text: 'Se ha activado la factura correctamente.',
+                    type: 'success'
+                });
+                var str = "Dato";
+                var str2 = "#" + DataID;
+                $(str2.concat(str)).empty();
+
+                $("<a href='#' class='btn btn-success btn-sm' onclick=DeleteEquip('" + DataID + "'); ><i class='fa fa-check'></i></a>").appendTo(str2.concat(str));
+
+            }
+            else {
+                alert("Ups! Algo malo ocurrió");
+            }
+        });
+    }
+
+
+</script>

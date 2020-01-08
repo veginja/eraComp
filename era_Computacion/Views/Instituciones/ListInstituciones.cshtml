@@ -1,0 +1,321 @@
+﻿@model IEnumerable<era_Computacion.Models.db.Cliente>
+
+
+@{
+    ViewData["Title"] = "Instituciones";
+
+    string ru = ViewData["ReturnURL"] as string;
+}
+
+
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <div class="row">
+
+        <div class="col-12">
+            <div class="page-breadcrumb">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <h4 class="page-title">Instituciones</h4>
+                        <div class="d-flex align-items-center">
+
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="row col-md-12">
+                            <div class="col-md-12 col-lg-12 col-xl-12 text-right">
+                                <br />
+                                <a class='btn btn-info btm-xs' href='/Instituciones/agregarInstitucion'>Agregar institución</a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="card">
+                <div class="card-body">
+
+
+                    <div class="table-responsive ">
+                        <table id="tablaClientes" class="table">
+                            <thead>
+
+
+                                <tr>
+                                    <th>
+                                        ID
+                                    </th>
+                                    <th>
+                                        Nombre
+                                    </th>
+                                    <th>
+                                        Dirección
+                                    </th>
+                                    <th>
+                                        Teléfono
+                                    </th>
+                                    <th>
+                                        Correo
+                                    </th>
+                                    <th>
+                                        Descripcion
+                                    </th>
+                                    <th> Estado </th>
+                                    <th>
+                                        Editar / Mostrar
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IdCliente)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RInstNavigation.Nombre)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RInstNavigation.Descripcion)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RInstNavigation.Telefono)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RInstNavigation.Correo)
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RInstNavigation.RTipoInsNavigation.Descripcion)
+
+                                        </td>
+
+                                        <td id="@Html.DisplayFor(modelItem => item.IdCliente)Dato">
+                                            @if (item.RStatus == 1)
+                                            {
+                                                <a href='#' class='btn btn-success btn-sm' onclick='DeleteEquip(@Html.DisplayFor(modelItem => item.IdCliente))'><i class='fa fa-check'></i></a>
+                                            }
+                                            @if (item.RStatus == 2)
+                                            {
+                                                <a href='#' class='btn btn-danger btn-sm' onclick='ActivateEquip(@Html.DisplayFor(modelItem => item.IdCliente))'><i class='fa fa-minus'></i></a>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            <a class='btn btn-info btm-sm' href='/Instituciones/editarInstitucion?id=@Html.DisplayFor(modelItem => item.RInstNavigation.IdInstitucion)'><i class='fa fa-edit'></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+</div>
+<!-- Page Heading -->
+<script>
+    function asignarEmpresa() {
+        var url1 = '@Url.Content("~/")' + "Usuarios/getSelects";
+        var StringOption;
+        $.ajax({
+            type: 'POST',
+            url: url1,
+            cache: false,
+            success: function (data) {
+                swal.fire({
+                    title: 'Asignar Usuario - Institución',
+                    type: 'info',
+
+
+                    html:'<h2>Usuario</h2> <select id="swal-input7" class="form-control mb-1" placeholder="Usuario" >' + data.usuarios + '</select>' +
+                        '<h2>Instituciones</h2> <select id="swal-input8" class="form-control mb-1" placeholder="Instituciones" >' + data.instituciones + '</select>',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    focusConfirm: false,
+                    confirmButtonText:
+                        '<i class="fa fa-thumbs-up"></i>Asignar',
+                    confirmButtonAriaLabel: 'Asignar',
+                    cancelButtonText:
+                        '<i class="fa fa-thumbs-down">Cancelar</i>',
+                    cancelButtonAriaLabel: 'Cancelar',
+
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            resolve([
+                                
+                                $('#swal-input7').val(),
+                                $('#swal-input8').val()
+                            ])
+                        })
+                    },
+
+                }).then(function (result) {
+                    var url2 = '@Url.Content("~/")' + "Usuarios/asignarInstitucion/";
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url2,
+                        data: { idUsuario: result.value[0], idInstitucion: result.value[1] },
+                        cache: false,
+                        success: function (data) {
+                            if (data==true) {
+                                new PNotify({
+                                    title: 'Éxito',
+                                    text: 'Se ha asignado correctamente.',
+                                    type: 'success'
+                                });
+                                window.location.href = "/Usuarios/ListClientes";
+                            } else if(data==false) {
+                                new PNotify({
+                                    title: 'Error',
+                                    text: 'Ya esta asignado a esta empresa',
+                                    type: 'error'
+                                });
+                            }
+                        }
+
+                    });
+
+
+
+
+                }).catch(swal.noop);
+            }
+        });
+
+
+
+    }
+
+</script>
+
+<script>
+    $(document).ready(function calldata() {
+
+        $('#tablaClientes').DataTable({
+            "language": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            "destroy": true,
+            "pageLength": 10,
+            "order": [[0, "desc"]],
+            'bVisible': false,
+
+            "aoColumnDefs": [
+                { "sClass": "text-center", "aTargets": [2, 3] }
+            ]
+        });
+
+    });
+</script>
+
+<script>
+
+
+
+
+    function DeleteEquip(DataID) {
+        if (confirm("¿Está seguro de desactivar la institución?")) {
+            Delete(DataID);
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    function Delete(DataID) {
+        var url = '@Url.Content("~/")' + "Instituciones/desactivateInstitucion";
+        $.post(url, { ID: DataID }, function (data) {
+            if (data == "Desactivado") {
+                new PNotify({
+                    title: 'Desactivado',
+                    text: 'Se ha desactivado la institución correctamente.',
+                    type: 'success'
+                });
+                var str = "Dato";
+                var str2 = "#" + DataID;
+                $(str2.concat(str)).empty();
+
+                $("<a href='#' class='btn btn-danger btn-sm' onclick=ActivateEquip('" + DataID + "'); ><i class='fa fa-minus'></i></a>").appendTo(str2.concat(str));
+            }
+            else {
+                alert("Ups! Algo malo ocurrió");
+            }
+        });
+    }
+
+    function ActivateEquip(CustomerID) {
+        if (confirm("¿Está seguro de activar la institución?")) {
+            Activate(CustomerID);
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    function Activate(DataID) {
+        var url = '@Url.Content("~/")' + "Instituciones/activateInstitucion";
+        $.post(url, { ID: DataID }, function (data) {
+            if (data == "Activado") {
+                new PNotify({
+                    title: 'Activado',
+                    text: 'Se ha activado la institución correctamente.',
+                    type: 'success'
+                });
+                var str = "Dato";
+                var str2 = "#" + DataID;
+                $(str2.concat(str)).empty();
+
+                $("<a href='#' class='btn btn-success btn-sm' onclick=DeleteEquip('" + DataID + "'); ><i class='fa fa-check'></i></a>").appendTo(str2.concat(str));
+
+            }
+            else {
+                alert("Ups! Algo malo ocurrió");
+            }
+        });
+    }
+</script>

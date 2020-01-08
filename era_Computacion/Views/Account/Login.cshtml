@@ -1,0 +1,205 @@
+﻿@model era_Computacion.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Iniciar sesión";
+    Layout = null;
+
+    string return_url = "";
+    if (ViewData["return_url"] != null)
+    {
+        return_url = ViewData ["return_url"] as string;
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/ico" sizes="16x16" href="~/Template/assets/images/era-favi.ico">
+    <title>eraComputacion   |   Login</title>
+    <!-- Custom CSS -->
+    <link href="~/Template/dist/css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css">
+    <link href="~/plugins/pnotify/dist/pnotify.custom.min.css" rel="stylesheet" />
+    <link href="~/plugins/pnotify/dist/pnotify.buttons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="main-wrapper">
+
+        <div class="preloader">
+            <div class="lds-ripple">
+                <div class="lds-pos"></div>
+                <div class="lds-pos"></div>
+            </div>
+        </div>
+
+        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center " style="background: #eee;">
+            <div class="auth-box border-top border-secondary" style="background: #eee;">
+                <div id="loginform">
+                    <div class="text-center p-t-20 p-b-20">
+                        <span class="db"><img src="~/Template/assets/images/eracomputacion.png" width="188px" height="34px" alt="logo" /></span>
+                    </div>
+                    <br />
+                    <form class="form-horizontal m-t-20" id="loginform" asp-action="Login">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row p-b-30">
+                            <div class="col-12">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-success text-white" id="basic-addon1"><i class="ti-user"></i></span>
+                                    </div>
+                                    <!--label asp-for="Email" class="control-label"></label-->
+                                    <input asp-for="Email" type="text" class="form-control form-control-lg" placeholder="Usuario ó Correo" aria-label="Username" aria-describedby="basic-addon1" required="" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-warning text-white" id="basic-addon2"><i class="ti-key"></i></span>
+                                    </div>
+                                    <!--label asp-for="Password" class="control-label"></label-->
+                                    <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Contraseña" aria-label="Password" aria-describedby="basic-addon1" required="" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                    <input type="hidden" asp-for="ReturnURL" value="@return_url" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--div class="form-group">
+                            <label asp-for="ReturnURL" class="control-label"></label>
+                            <input asp-for="ReturnURL" class="form-control" />
+                            <span asp-validation-for="ReturnURL" class="text-danger"></span>
+                        </div-->
+                        <div class="row border-top border-secondary">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="p-t-20">
+                                        <br />
+
+                                        <a class="btn btn-info" asp-action="Registro"><i class="fas fa-user-plus m-r-5"></i>¿No tienes cuenta?</a>
+                                        <input type="submit" value="Login" class="btn btn-success float-right" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--div id="recoverform">
+                    <div class="text-center">
+                        <span class="text-white">Ingresa tu Correo electrónico y nosotros te enviaremos los pasos para poder recuperar tu contraseña.</span>
+                        <br />
+                        <br />
+                    </div>
+                    <div class="row m-t-20">
+                        <!-- Form -->
+                <!--form class="col-12" action="index.html">
+                    <!-- email -->
+                <!--div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-danger text-white" id="basic-addon1"><i class="ti-email"></i></span>
+                    </div>
+                    <input type="text" class="form-control form-control-lg" placeholder="Correo Electrónico" aria-label="Username" aria-describedby="basic-addon1">
+                </!--div>
+                <!-- pwd -->
+                <!--div class="row m-t-20 p-t-20 border-top border-secondary">
+                                <div class="col-12">
+                                    <br />
+                                    <a class="btn btn-success" href="#" id="to-login" name="action">Volver al Login</a>
+                                    <button class="btn btn-info float-right" type="button" name="action">Rescuperar</button>
+                                </div>
+                            </!--div>
+                        </!--form>
+                    </div>
+                </!--div-->
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index" asp-controller="Home">Back to Inicio</a>
+    </div>
+    <script src="~/Template/assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="~/Template/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="~/Template/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- ============================================================== -->
+    <!-- This page plugin js -->
+    <!-- ============================================================== -->
+    <!-- Pnotify -->
+    <script src="~/plugins/pnotify/dist/pnotify.js"></script>
+    <script src="~/plugins/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+    <script>
+
+        $('[data-toggle="tooltip"]').tooltip();
+        $(".preloader").fadeOut();
+        // ==============================================================
+        // Login and Recover Password
+        // ==============================================================
+        $('#to-recover').on("click", function () {
+            $("#loginform").slideUp();
+            $("#recoverform").fadeIn();
+        });
+        $('#to-login').click(function () {
+
+            $("#recoverform").hide();
+            $("#loginform").fadeIn();
+        });
+    </script>
+
+    @{
+        string controlmsj = "";
+        if (TempData["mensaje"] != null)
+        {
+            controlmsj = TempData["mensaje"].ToString();
+        }
+    }
+
+
+    @if (controlmsj == "registroExitoso")
+    {
+
+        <script>
+            $(document).ready(function () {
+                new PNotify({
+                    title: 'Éxito',
+                    text: 'Se ha creado registrado correctamente',
+                    type: 'success'
+                });
+            });
+        </script>
+
+        TempData.Remove("mensaje");
+    }
+    @if (controlmsj == "errorLogin")
+    {
+
+        <script>
+            $(document).ready(function () {
+                new PNotify({
+                    title: 'Error',
+                    text: 'Usuario o contraseña incorrectos',
+                    type: 'error'
+                });
+            });
+        </script>
+
+        TempData.Remove("mensaje");
+    }
+    
+</body>
+</html>

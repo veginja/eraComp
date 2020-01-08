@@ -1,0 +1,95 @@
+﻿@model era_Computacion.Models.db.Productos
+@{
+    ViewData["Title"] = "Editar producto";
+}
+    <div class="page-breadcrumb">
+        <div class="row align-items-center">
+            <div class="col-5">
+                <h4 class="page-title">@ViewData["Title"]</h4>
+
+            </div>
+
+        </div>
+    </div>
+<hr />
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Row -->
+    <div class="row">
+
+        <!-- Column -->
+        <div class="col-lg-12 col-xlg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="form-horizontal form-material" asp-action="editarProducto" enctype="multipart/form-data">
+                        <div class="row">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="IdProductos" />
+                            <div class="form-group col-md-6">
+                                <label asp-for="NombreProd" class="control-label">Nombre del producto</label>
+                                <input asp-for="NombreProd" required class="form-control" />
+                                <span asp-validation-for="NombreProd" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Cantidad" class="control-label"></label>
+                                <input asp-for="Cantidad" type="number" min="0" required class="form-control" />
+                                <span asp-validation-for="Cantidad" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PrecioCompraXunidad" class="control-label">Precio de compra</label>
+                                <input asp-for="PrecioCompraXunidad" type="number" min="0" step="any" required class="form-control" />
+                                <span asp-validation-for="PrecioCompraXunidad" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PrecioVentaXunidad" class="control-label">Precio de venta</label>
+                                <input asp-for="PrecioVentaXunidad" type="number" min="0" step="any" required class="form-control" />
+                                <span asp-validation-for="PrecioVentaXunidad" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label asp-for="Descripcion" class="control-label">Descripción</label>
+                                <input asp-for="Descripcion" required class="form-control" />
+                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Imagen del producto</label><br />
+                                <span class="btn btn-success fileinput-button">
+                                    <span>Selecciona una imagen</span>
+                                    <input accept="image/jpeg, image/png, image/gif,"
+                                           id="files" name="files" type="file" />
+                                </span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="RCatProducto" class="control-label">Categoria del producto</label>
+                                <select asp-for="RCatProducto" required class="form-control" asp-items="ViewBag.tipos"></select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12 text-center">
+                                <button class="btn btn-success">Editar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+    </div>
+    <!-- Row -->
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+</div>
+
+

@@ -1,0 +1,217 @@
+﻿@model IEnumerable<era_Computacion.Models.solicitudCustom>
+
+
+@{
+    ViewData["Title"] = "Historial de pedidos";
+
+    string ru = ViewData["ReturnURL"] as string;
+}
+
+
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <div class="row">
+
+        <div class="col-12">
+            <div class="page-breadcrumb">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <h4 class="page-title">@ViewData["Title"]</h4>
+                        <div class="d-flex align-items-center">
+
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+            </div>
+            <div class="card">
+                <div class="card-body">
+
+
+                    <div class="table-responsive ">
+                        <table id="tablaPaquetes" class="table">
+                            <thead>
+
+
+                                <tr>
+                                    <th>
+                                        ID
+                                    </th>
+                                    <th>
+                                        Empresa
+                                    </th>
+                                    <th>
+                                        Paquete
+                                    </th>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th>
+                                        Monto
+                                    </th>
+                                    <th>
+                                        Factura
+                                    </th>
+                                    <th> Estado </th>
+                                    <th>
+                                        Detalles
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.solicitud.IdSolicitud)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.solicitud.RClienteNavigation.RInstNavigation.Nombre)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.solicitud.RPaqueteNavigation.Nombre)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.solicitud.FechaSolicitud)
+                                        </td>
+                                        <td class="text-center">
+                                            $@Html.DisplayFor(modelItem => item.solicitud.PrecioSolicitud)
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (item.factura != null)
+                                                {
+                                                    <a class="btn" href="~/images/facturas/@item.factura.DocFacturacion" download="@item.factura.DocFacturacion"> <i class="fa fa-download"></i> Descargar</a>
+
+                                                }else
+                                                {
+                                                    @Html.Raw("Factura no disponible");
+                                                }
+                                            }
+                                        </td>
+
+                                        <td id="@Html.DisplayFor(modelItem => item.solicitud.IdSolicitud)Dato">
+                                            <div class="dropdown">
+                                                @{if (item.solicitud.RStatus == 4)
+                                                    {
+                                                        <button class="btn btn-warning" aria-haspopup="true" aria-expanded="false">
+                                                            Pendiente
+                                                        </button>
+                                                    }
+                                                    else if (item.solicitud.RStatus == 5)
+                                                    {
+                                                        <button class="btn btn-danger" aria-haspopup="true" aria-expanded="false">
+                                                            Rechazado
+                                                        </button>
+                                                    }
+                                                    else if (item.solicitud.RStatus == 6)
+                                                    {
+                                                        <button class="btn btn-success" aria-haspopup="true" aria-expanded="false">
+                                                            Aceptado
+                                                        </button>
+                                                    }
+
+                                                }
+
+
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            
+                                            <a class='btn btn-info btm-sm' onclick="verdetalle(@item.solicitud.RPaqueteNavigation.IdPaquete)"><i class='fa fa-eye text-white'></i></a>
+                                            
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End PAge Content -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Right sidebar -->
+    <!-- ============================================================== -->
+    <!-- .right-sidebar -->
+    <!-- ============================================================== -->
+    <!-- End Right sidebar -->
+    <!-- ============================================================== -->
+</div>
+<!-- Page Heading -->
+
+<script>
+
+    function verdetalle(id) {
+                                $.ajax({
+
+                url : '/Historial/verDetalle?id='+id,
+                type : 'POST',
+
+                dataType:'json',
+
+                                    success: function (data) {
+                                        swal.fire({
+                                            
+
+                                            html: data,
+                                            showCloseButton: true,
+                                            showCancelButton: false,
+                                            focusConfirm: false,
+
+                                        });
+                                    }
+        });
+    }
+    
+    $(document).ready(function calldata() {
+
+        $('#tablaPaquetes').DataTable({
+            "language": {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            "destroy": true,
+            "pageLength": 10,
+            "order": [[0, "desc"]],
+            'bVisible': false,
+
+            "aoColumnDefs": [
+                { "sClass": "text-center", "aTargets": [2, 3] }
+            ]
+        });
+
+    });
+</script>
+

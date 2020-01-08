@@ -1,0 +1,483 @@
+﻿
+
+@{
+    ViewData["Title"] = "Estadisticas";
+
+    string ru = ViewData["ReturnURL"] as string;
+}
+
+
+<div class="container-fluid">
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Inicio</h1>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+
+
+                    <style>
+
+                        .select-box {
+                            cursor: pointer;
+                            position: relative;
+                            max-width: 20em;
+                            width: 100%;
+                        }
+
+                        .select,
+                        .label {
+                            color: #414141;
+                            display: block;
+                            font: 400 17px/2em 'Source Sans Pro', sans-serif;
+                        }
+
+                        .select {
+                            width: 100%;
+                            position: absolute;
+                            top: 0;
+                            padding: 5px 0;
+                            height: 40px;
+                            opacity: 0;
+                            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+                            background: none transparent;
+                            border: 0 none;
+                        }
+
+                        .select-box1 {
+                            background: #fff;
+                        }
+
+                        .label {
+                            position: relative;
+                            padding: 5px 10px;
+                            cursor: pointer;
+                        }
+
+                        .open .label::after {
+                            content: "▲";
+                        }
+
+                        .label::after {
+                            content: "▼";
+                            font-size: 12px;
+                            position: absolute;
+                            right: 0;
+                            top: 0;
+                            padding: 5px 15px;
+                            border-left: 5px solid #fff;
+                        }
+                    </style>
+                    <!-- Content Row -->
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="row col-md-12 col-xs-12">
+                                    <div class="col-md-6 col-xs-12">
+                                        <div class="select-box">
+
+                                            <label for="select-box1" class="label select-box1"><span class="label-desc">@DateTime.Now.Year.ToString()</span> </label>
+                                            <select id="select-box1" class="select"></select>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 col-xs-12">
+                                        <div class="select-box">
+                                            @{
+                                                string mes = DateTime.Now.Month.ToString();
+
+                                                if (mes.Equals("1"))
+                                                {
+                                                    mes = "Enero";
+                                                }
+                                                if (mes.Equals("2"))
+                                                {
+                                                    mes = "Febrero";
+                                                }
+                                                if (mes.Equals("3"))
+                                                {
+                                                    mes = "Marzo";
+                                                }
+                                                if (mes.Equals("4"))
+                                                {
+                                                    mes = "Abril";
+                                                }
+                                                if (mes.Equals("5"))
+                                                {
+                                                    mes = "Mayo";
+                                                }
+                                                if (mes.Equals("6"))
+                                                {
+                                                    mes = "Junio";
+                                                }
+                                                if (mes.Equals("7"))
+                                                {
+                                                    mes = "Julio";
+                                                }
+                                                if (mes.Equals("8"))
+                                                {
+                                                    mes = "Agosto";
+                                                }
+                                                if (mes.Equals("9"))
+                                                {
+                                                    mes = "Septiembre";
+                                                }
+                                                if (mes.Equals("10"))
+                                                {
+                                                    mes = "Octubre";
+                                                }
+                                                if (mes.Equals("11"))
+                                                {
+                                                    mes = "Noviembre";
+                                                }
+                                                if (mes.Equals("12"))
+                                                {
+                                                    mes = "Diciembre";
+                                                }
+
+
+
+
+                                            }
+                                            <label for="select-box2" class="label select-box1">
+                                                <span class="label-desc">
+                                                    @mes
+                                                </span>
+                                            </label>
+
+                                            <select id="select-box2" class="select"></select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $("select").on("click", function () {
+
+                    $(this).parent(".select-box").toggleClass("open");
+
+                });
+
+                $(document).mouseup(function (e) {
+                    var container = $(".select-box");
+
+                    if (container.has(e.target).length === 0) {
+                        container.removeClass("open");
+                    }
+                });
+
+
+                $("select").on("change", function () {
+
+                    var selection = $(this).find("option:selected").text(),
+                        labelFor = $(this).attr("id"),
+                        label = $("[for='" + labelFor + "']");
+
+                    label.find(".label-desc").html(selection);
+
+                });
+            </script>
+
+            <br />
+
+            <div class="row">
+
+                <!-- Area Chart -->
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Paquetes más vendidos</h6>
+                            
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area" id="containertipospolChart">
+                                <canvas id="tipospolChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Paquetes con mayores ganancias</h6>
+
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area" id="containerRubros">
+                                <canvas id="rubrosChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+</div>
+
+
+
+        <script>
+        $(document).ready(function () {
+            getAnios();
+            getMeses();
+            var fecha = new Date();
+
+            $('#select-box1').on('change', function () {
+                getRubros($("#select-box1").val(), $("#select-box2").val());
+            });
+
+            $('#select-box2').on('change', function () {
+                getRubros($("#select-box1").val(), $("#select-box2").val());
+            });
+
+            getRubros(fecha.getFullYear(), fecha.getMonth()+1);
+            //
+
+        });
+
+        function getAnios() {
+            var url = '@Url.Content("~/")' + "Finanzas/showAnioEmpresa";
+            $.post(url, function (data) {
+                if (data.len > 0) {
+
+
+                    $("#select-box1").append(data.data);
+                }
+            });
+        }
+
+        function getMeses() {
+            var url = '@Url.Content("~/")' + "Finanzas/showMesesEmpresa";
+            $.post(url, function (data) {
+                if (data.len > 0) {
+
+                    $("#select-box2").append(data.data);
+                }
+            });
+        }
+
+
+
+        function getRubros(anio,mes) {
+
+            $.ajax({
+                type: "GET",
+                url: "/Finanzas/getRubros?anio=" + anio + "&mes=" + mes,
+
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.url) {
+                        window.location.href = result.url;
+                    }
+
+                    llenarGraficaRubros(result);
+                    getTipoPoliza(anio, mes);
+                },
+                error: function (response) {
+
+                    console.log('eror');
+                }
+            });
+        }
+
+
+        function getTipoPoliza(anio,mess) {
+
+            $.ajax({
+                type: "GET",
+                url: "/Finanzas/getTipoPoliza?anio=" + anio + "&mess=" + mess,
+
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.url) {
+                        window.location.href = result.url;
+                    }
+
+                    llenarGraficaPoliza(result);
+                },
+                error: function (response) {
+
+                    console.log('eror');
+                }
+            });
+        }
+
+
+
+        function llenarGraficaRubros(result) {
+
+            var config = {
+                type: 'bar',
+                data: result,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            // this callback is used to create the tooltip label
+                            label: function (tooltipItem, data) {
+                                // get the data label and data value to display
+                                // convert the data value to local string so it uses a comma seperated number
+                                var dataLabel = data.labels[tooltipItem.index];
+                                // add the currency symbol $ to the label
+                                var value = ': $ ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
+                                // make sure this isn't a multi-line label (e.g. [["label 1 - line 1, "line 2, ], [etc...]])
+                                if (Chart.helpers.isArray(dataLabel)) {
+                                    // show value on first line of multiline label
+                                    // need to clone because we are changing the value
+                                    dataLabel = dataLabel.slice();
+                                    dataLabel[0] += value;
+                                } else {
+                                    dataLabel += value;
+                                }
+                                // return the text to display on the tooltip
+                                return dataLabel;
+                            }
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Paquete'
+                            },
+                            ticks: {
+                                display: false //this will remove only the label
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            
+                            ticks: {
+                                beginAtZero: true,
+                                userCallback: function (value, index, values) {
+                                    // Convert the number to a string and splite the string every 3 charaters from the end
+                                    value = value.toString();
+                                    //value = value.split(/(?=(?:...)*$)/);
+
+                                    // Convert the array to a string and format the output
+                                   // value = value.join('.');
+                                    return '$' + value;
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Ganancia'
+                            }
+                        }]
+                    },
+                    plugins: {
+                        datalabels: {
+                            color: 'black',
+                            display: function (context) {
+                                return context.dataset.data[context.dataIndex] % 2;
+                            },
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: function (value, context) {
+                                return "$" + value.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+                            }
+
+                        }
+                    },
+
+                }
+            };
+            $('#rubrosChart').remove(); // this is my <canvas> element
+            $('#containerRubros').append('<canvas id="rubrosChart"><canvas>');
+            var ctx = document.getElementById('rubrosChart').getContext('2d');
+
+            window.myRubros = new Chart(ctx, config);
+
+        }
+
+
+   
+        function llenarGraficaPoliza(result) {
+
+            var config = {
+                type: 'pie',
+                data: result,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: true
+                    },
+                    tooltips: {
+                        callbacks: {
+                            // this callback is used to create the tooltip label
+                            label: function (tooltipItem, data) {
+                                // get the data label and data value to display
+                                // convert the data value to local string so it uses a comma seperated number
+                                var dataLabel = data.labels[tooltipItem.index];
+                                // add the currency symbol $ to the label
+                                var value = ':  ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
+                                // make sure this isn't a multi-line label (e.g. [["label 1 - line 1, "line 2, ], [etc...]])
+                                if (Chart.helpers.isArray(dataLabel)) {
+                                    // show value on first line of multiline label
+                                    // need to clone because we are changing the value
+                                    dataLabel = dataLabel.slice();
+                                    dataLabel[0] += value;
+                                } else {
+                                    dataLabel += value;
+                                }
+                                // return the text to display on the tooltip
+                                return dataLabel;
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        datalabels: {
+                            color: 'black',
+                            display: function (context) {
+                                return context.dataset.data[context.dataIndex] %2;
+                            },
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: function (value, context) {
+                                return "$" + value.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+                            }
+
+                        }
+                    },
+                }
+            };
+            $('#tipospolChart').remove(); // this is my <canvas> element
+            $('#containertipospolChart').append('<canvas id="tipospolChart"><canvas>');
+
+            var ctx = document.getElementById('tipospolChart').getContext('2d');
+            window.myRubros = new Chart(ctx, config);
+
+        }
+        </script>
